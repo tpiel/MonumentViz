@@ -1,6 +1,6 @@
 // JavaScript source code for Data visuals
 
-d3.csv("Whose Heritage_year total.csv").then(function(dataset){
+d3.csv("Whose_Heritage_year_total.csv").then(function(dataset){
     console.log(dataset)
     // I have no idea why dataset.year won't give me what I need
     console.log(dataset.Year)
@@ -14,16 +14,20 @@ d3.csv("Whose Heritage_year total.csv").then(function(dataset){
         .style("width", 400)
         .style("height", 400)
 
-    var xAccessor = d => d.Year
-    var yAccessor = d => d.Number
+    var xAccessor = d => +d.Year
+    var yAccessor = d => +d.Number
 
-    console.log(xAccessor)
+    console.log(dataset[0])
+
+    var xScale = d3.scaleLinear()
+        .domain(d3.extent(dataset, xAccessor))
+        .range([0,dimensions.width])
 
     var yScale = d3.scaleLinear()
         .domain(d3.extent(dataset, yAccessor))
         .range([dimensions.height, 0])
 
-    console.log(yScale)
+    console.log(d3.extent(dataset, xAccessor))
 
     var xAxis = d3.scaleTime()
         .domain(d3.extent(dataset, xAccessor))
@@ -38,16 +42,18 @@ d3.csv("Whose Heritage_year total.csv").then(function(dataset){
     svg.append("g")
         .call(d3.axisLeft(yAxis));
 
-    svg.append("path")
+
+    svg.selectAll("path")
         .data(dataset)
+        .append("path")
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-            .x(xAccessor)
-            .y(yAccessor)
+            .x(d => { console.log(xScale(xAccessor(d))) })
+            .y(d=>yScale(yAccessor(d)))
         )
-
+    
 
 
 })
