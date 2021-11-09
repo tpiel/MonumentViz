@@ -3,7 +3,6 @@
 d3.csv("Whose_Heritage_year_total.csv").then(function(dataset){
     console.log(dataset)
     // I have no idea why dataset.year won't give me what I need
-    console.log(dataset.Year)
     var dimensions = {
         width: 400,
         height: 400,
@@ -43,15 +42,14 @@ d3.csv("Whose_Heritage_year_total.csv").then(function(dataset){
         .call(d3.axisLeft(yAxis));
 
 
-    svg.selectAll("path")
-        .data(dataset)
-        .append("path")
+    svg.append("path")
+        .data([dataset])
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("stroke-width", 1.5)
         .attr("d", d3.line()
-            .x(d => { console.log(xScale(xAccessor(d))) })
-            .y(d=>yScale(yAccessor(d)))
+            .x(d => xScale(xAccessor(d)))
+            .y(d=> yScale(yAccessor(d)))
         )
     
 
